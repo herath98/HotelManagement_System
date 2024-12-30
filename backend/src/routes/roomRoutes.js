@@ -1,5 +1,5 @@
 import express from 'express';
-import { createRoom, getRoomAvailability, getRoomNotCleaned, updateRoom } from '../controllers/roomController.js';
+import { createRoom, getRoomAvailability, getRoomNotCleaned, updateRoom,deleteRoomById } from '../controllers/roomController.js';
 import { verifyUser, requireRole } from '../middleware/validationMiddleware.js';
 
 const router = express.Router();
@@ -9,7 +9,7 @@ const router = express.Router();
  * /rooms:
  *   post:
  *     summary: Add a new room.
-  *     tags:
+ *     tags:
  *       - Rooms
  *     security:
  *       - bearerAuth: []
@@ -88,5 +88,29 @@ router.get('/rooms/not_cleaned/list', verifyUser, requireRole(['admin','manager'
  *         description: Room status updated successfully.
  */
 router.post('/rooms/status', verifyUser, requireRole(['admin']), updateRoom);
+
+/**
+ * @swagger
+ * /rooms/delete:
+ *   post:
+ *     summary: Delete a room.
+ *     tags:
+ *       - Rooms
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Room deleted successfully.
+ */
+router.post('/rooms/delete',verifyUser, requireRole(['admin','manager']), deleteRoomById);
 
 export default router;

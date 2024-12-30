@@ -3,8 +3,11 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import userRoutes from './src/routes/userRoutes.js';
 import roomRoutes from './src/routes/roomRoutes.js';
+import guestRoutes from './src/routes/guestRoutes.js';
 import swaggerDocs from './src/config/swagger.js';
 import pool from './src/config/database.js';
+import housekeepingRoutes from './src/routes/housekeepingRoutes.js';
+import './src/jobs/taskStatusUpdater.js';
 
 dotenv.config();
 
@@ -20,6 +23,9 @@ app.use('/api', userRoutes);
 
 // Routes
 app.use('/api', roomRoutes);
+
+app.use('/api', housekeepingRoutes);
+app.use('/api', guestRoutes);
 
 // Swagger documentation setup
 swaggerDocs(app);

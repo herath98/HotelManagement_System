@@ -20,5 +20,8 @@ export const updateRoomStatus = async (id, status) => {
   return result.rows[0];
 };
 
-
-
+export const deleteRoom = async (id) => {
+  const query = 'DELETE FROM rooms WHERE id = $1 RETURNING *';
+  const result = await pool.query(query, [id]);
+  return result.rows[0];
+};

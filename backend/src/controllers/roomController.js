@@ -1,4 +1,4 @@
-import { addRoom, getRoomsByStatus, updateRoomStatus } from '../models/roomModel.js';
+import { addRoom, getRoomsByStatus, updateRoomStatus, deleteRoom } from '../models/roomModel.js';
 
 export const createRoom = async (req, res) => {
   try {
@@ -41,4 +41,16 @@ export const updateRoom = async (req, res) => {
       res.status(500).json({ success: false, message: error.message });
     }
   };
-  
+
+export const deleteRoomById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const deletedRoom = await deleteRoom(id);
+      if (!deletedRoom) {
+        return res.status(404).json({ success: false, message: 'Room not found' });
+      }
+      res.status(200).json({ success: true, data: deletedRoom });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };

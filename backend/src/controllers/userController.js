@@ -286,8 +286,8 @@ export const getAllStaffs = async (req, res) => {
 
 export const PasswordChange = async (req, res) => {
     const { userId, newPassword } = req.body;
-    const requestorId = req.userId; // Assuming this is set by middleware after decoding the token
-    const requestorRole =  req.userRole; // Assuming role is part of the authenticated user payload
+    const requestorId = req.userId; 
+    const requestorRole =  req.userRole;
 
     try {
         // Fetch the target user details
