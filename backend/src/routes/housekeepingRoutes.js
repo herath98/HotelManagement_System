@@ -1,5 +1,5 @@
 import express from 'express';
-import { createHousekeepingTask, listHousekeepingTasks,listHousekeepingTasksByAssignedTo} from '../controllers/housekeepingController.js';
+import { createHousekeepingTask, listHousekeepingTasks,listHousekeepingTasksByAssignedTo, updateHousekeepingTaskStatus, updateHousekeepingTask} from '../controllers/housekeepingController.js';
 import { verifyUser, requireRole } from '../middleware/validationMiddleware.js';
 
 const router = express.Router();
@@ -88,5 +88,72 @@ router.post('/assigned/task', verifyUser, listHousekeepingTasksByAssignedTo);
  *         description: List of housekeeping tasks.
  */
 router.get('/housekeeping/task/list', verifyUser, listHousekeepingTasks );
+
+/**
+ * @swagger
+ * /housekeeping/task/update:
+ *  post:
+ *    summary: Update a housekeeping task.
+ *    tags:
+ *      - Schedule task
+ *    security:
+ *      - bearerAuth: []
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: integer
+ *              task_name:
+ *                type: string
+ *              task_status:
+ *                type: string
+ *                enum: [Pending, Complete, Not Complete]
+ *              scheduled_date:
+ *                type: string
+ *                format: date
+ *              start_time:
+ *                type: string
+ *                format: time
+ *              end_time:
+ *                type: string
+ *                format: time
+ *              assigned_to:
+ *                type: integer
+ *    responses:
+ *      200:
+ *        description: Housekeeping task updated successfully.
+ */
+router.post('/housekeeping/task/update', verifyUser, requireRole(['admin', 'manager']), updateHousekeepingTask);
+
+/**
+ * @swagger
+ * /housekeeping/task_status/update:
+ *  post:
+ *    summary: Update the status of a housekeeping task.
+ *    tags:
+ *      - Schedule task
+ *    security:
+ *      - bearerAuth: []
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              id:
+ *                type: integer
+ *              status:
+ *                type: string
+ *                enum: [Pending, Complete, Incomplete]
+ *    responses:
+ *      200:
+ *        description: Housekeeping task status updated successfully.
+ */
+router.post('/housekeeping/task_status/update', verifyUser, requireRole(['admin', 'manager']), updateHousekeepingTaskStatus);
 
 export default router;

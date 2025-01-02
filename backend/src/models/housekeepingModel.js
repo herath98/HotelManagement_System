@@ -50,8 +50,6 @@ export const createTask = async (task) => {
 };
 
 
-
-
 export const getTasks = async () => {
     const query = `
         SELECT 
@@ -86,6 +84,66 @@ export const getTasksByAssignedTo = async (userId) => {
         return result.rows;
     } catch (error) {
         console.error('Error in getTasksByAssignedTo:', error);
+        throw error;
+    }
+};
+
+export const updateTaskStatus = async (id, status) => {
+    const query = 'UPDATE housekeeping_tasks SET task_status = $1 WHERE id = $2 RETURNING *';
+    const values = [status, id];
+    try {
+        const result = await pool.query(query, values);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error updating task status:', error);
+        throw error;
+    }
+};
+
+export const updateTask = async (id, updates) => {
+    // Construct the UPDATE query
+    const { task_name, task_status, scheduled_date, start_time, end_time, assigned_to } = updates;
+    let query = 'UPDATE housekeeping_tasks SET ';
+    const values = [];
+    let i = 1;
+    if (task_name) {
+        query += `task_name = $${i}, `;
+        values.push(task_name);
+        i++;
+    }
+    if (task_status) {
+        query += `task_status = $${i}, `;
+        values.push(task_status);
+        i++;
+    }
+    if (scheduled_date) {
+        query += `scheduled_date = $${i}, `;
+        values.push(scheduled_date);
+        i++;
+    }
+    if (start_time) {
+        query += `start_time = $${i}, `;
+        values.push(start_time);
+        i++;
+    }
+    if (end_time) {
+        query += `end_time = $${i}, `;
+        values.push(end_time);
+        i++;
+    }
+    if (assigned_to) {
+        query += `assigned_to = $${i}, `;
+        values.push(assigned_to);
+        i++;
+    }
+    query = query.slice(0, -2); //remove trailing comma and space
+    query += ` WHERE id = $${i} RETURNING *`;
+    values.push(id);
+    try {
+        const result = await pool.query(query, values);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Error updating task:', error);
         throw error;
     }
 };

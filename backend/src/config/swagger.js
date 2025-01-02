@@ -5,9 +5,9 @@ const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Node.js Login API',
+            title: 'Hotel Management System',
             version: '1.0.0',
-            description: 'Login API documentation',
+            description: 'API documentation for the Hotel Management System',
         },
         servers: [{
             url: '/api',
